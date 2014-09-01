@@ -7,6 +7,10 @@ gem 'rspec-rails', '~> 3.0.2'
 gem 'jbuilder', '~> 2.0'
 gem 'spring',        group: :development
 gem 'bcrypt', '~> 3.1.7'
+gem 'excon'
+gem 'quiet_assets', '~> 1.0.3'
+gem 'json'
+gem 'pry'
 
 # assets and various sundries
 gem 'foundation-rails'

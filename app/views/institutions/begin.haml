@@ -1,0 +1,26 @@
+.row
+  .columns.large-6.large-centered
+    %h2
+      Connect to Your Bank
+    %p
+      No Joke, We must ask you for some sensitive information.  
+    %p
+      WeSave does not store this information and we take steps to ensure your credentials remain protected while being used to authorize your bank account.
+.row
+  .columns.large-5.large-centered
+    = form_for :institution, url: "/authorize", html: {id: "authorize-institution"} do |f|
+      = f.label "Please select your Bank "
+      = f.select "name", @institutions
+
+      = f.text_field "username", placeholder: "Bank Account Username", class: "validates-presence"
+
+      = f.password_field "password", placeholder: "Bank Account Password", class: "validates-presence"
+
+      = f.text_field "pin", placeholder: "Bank Account Web Pin, if You Use It, NOT ATM Pin"
+      .row
+        .columns.large-4.large-centered
+          = f.submit "Connect", class: "button success medium rounded"
+.row
+  .columns.large-6.large-centered
+    %h4
+      #{mail_to OWNER_EMAIL, "Email John"} if you have security questions

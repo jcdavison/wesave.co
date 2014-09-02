@@ -1,14 +1,14 @@
 validateForms = () ->
   $("form").submit (e) ->
     if validatesPresence() is true
-      true
+      return true
     else
-      false
+      return false
 
 validatesPresence = () ->
   select = $(".validates-presence")
   if select.length is 0
-    true
+    return true
   if select.length > 0
     errors = 0
     $("input.validates-presence").each ( index, element ) ->
@@ -19,9 +19,9 @@ validatesPresence = () ->
         presenceErrorRelease(element)
         errors += 1
   if errors is 0
-    true
+    return true
   else
-    false
+    return false
 
 presenceErrorRelease = (element) ->
   $(element).focus ->

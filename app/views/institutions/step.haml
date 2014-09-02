@@ -1,9 +1,9 @@
 .row
   .large-6.large-centered.columns
     Please answer:
-    = form_for :mfa_step, url: "/mfa" do |f|
+    = form_for :mfa, url: "/mfa" do |f|
       - @mfa_response.each_with_index do |pair, index|
         %h4
           = pair["question"]
-        = f.text_field "mfa", placeholder: "your answer"
+        = f.text_field "answer", placeholder: "your answer"
       = f.submit "Submit", class: "button success rounded medium center"

@@ -28,15 +28,34 @@ class Plaid
     Excon.post("#{@api_server}/connect", query: connect_query(params))
   end
 
+  def mfa_step params, institution
+    query = mfa_query(params, institution.token)
+    query = set_type(query, institution.name)
+    Excon.post("#{@api_server}/connect/step", query: query)
+  end
+
+  def mfa_query params, token
+    query = { 
+      :client_id => client_id,
+      :secret => secret,
+      :mfa => params[:mfa][:answer],
+      :access_token => token
+      }
+    plaid_test_credentials query
+    query
+  end
+
   def connect_query params
-    query = { :client_id => client_id,
+    query = { 
+      :client_id => client_id,
       :secret => secret,
       :credentials => {
         :username => params[:institution][:username], 
         :password => params[:institution][:password],
         :pin => params[:institution][:pin]
         }, 
-      :type => params[:institution][:type].downcase, :email => @account_email }
+      :type => params[:institution][:type].downcase, :email => @account_email 
+    }
     query[:credentials] = JSON.generate(query[:credentials])
     plaid_test_credentials query
     query
@@ -46,6 +65,13 @@ class Plaid
     if Rails.env.development?
       query[:client_id] = "test_id"
       query[:secret] = "test_secret"
+    end
+    query
+  end
+
+  def set_type query, name
+    if Rails.env.development?
+      query[:type] = name
     end
     query
   end

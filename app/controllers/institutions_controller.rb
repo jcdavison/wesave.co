@@ -7,7 +7,7 @@ class InstitutionsController < ApplicationController
     plaid = Plaid.new
     user = User.find(current_user)
     institution = user.institutions.new 
-    institution.name = params[:type]
+    institution.name = params[:institution][:type]
 
     response = plaid.initiate_authorization params
     body = JSON.parse response.data[:body]
@@ -17,7 +17,7 @@ class InstitutionsController < ApplicationController
       if response.status == 201
         redirect_to step_path(mfa: body["mfa"])
       elsif response.status == 200
-        # redirect_to whatever-to-add rev exp path
+        redirect_to home_path
       end
     else
       redirect_to :back
@@ -29,10 +29,22 @@ class InstitutionsController < ApplicationController
   end
 
   def mfa
-
+    plaid = Plaid.new
+    institution = current_user.institutions.last
+    response = plaid.mfa_step params, institution
+    body = JSON.parse response.data[:body]
+    route_mfa_step response, body
   end
 
-  def confirm
+  private
 
+  def route_mfa_step response, body
+    if response.status == 201
+      redirect_to step_path(mfa: body["mfa"])
+    elsif response.status == 200
+      redirect_to home_path
+    else
+      redirect_to :back
+    end
   end
 end

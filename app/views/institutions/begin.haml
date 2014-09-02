@@ -10,13 +10,13 @@
   .columns.large-5.large-centered
     = form_for :institution, url: "/authorize", html: {id: "authorize-institution"} do |f|
       = f.label "Please select your Bank "
-      = f.select "name", @institutions
+      = f.select "type", @institutions
 
       = f.text_field "username", placeholder: "Bank Account Username", class: "validates-presence"
 
       = f.password_field "password", placeholder: "Bank Account Password", class: "validates-presence"
 
-      = f.text_field "pin", placeholder: "Bank Account Web Pin, if You Use It, NOT ATM Pin"
+      = f.password_field "pin", placeholder: "Bank Account Web Pin, if You Use It, NOT ATM Pin"
       .row
         .columns.large-4.large-centered
           = f.submit "Connect", class: "button success medium rounded"

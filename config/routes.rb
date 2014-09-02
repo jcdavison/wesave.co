@@ -11,5 +11,7 @@ Rails.application.routes.draw do
   end
 
   get '/begin', to: 'institutions#begin'
+  get '/step', to: 'institutions#step'
   post '/authorize', to: 'institutions#authorize'
+  post '/mfa', to: 'institutions#mfa'
 end

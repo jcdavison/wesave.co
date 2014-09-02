@@ -25,20 +25,30 @@ class Plaid
   end
 
   def initiate_authorization params
-    Excon.post("#{@api_server}/connect", query: build_query(params))
+    Excon.post("#{@api_server}/connect", query: connect_query(params))
   end
 
-  def build_query params
+  def connect_query params
     query = { :client_id => client_id,
       :secret => secret,
       :credentials => {
-        :username => params["username"], 
-        :password => params["password"],
-        :pin => params["pin"]
+        :username => params[:institution][:username], 
+        :password => params[:institution][:password],
+        :pin => params[:institution][:pin]
         }, 
-      :type => params["type"], :email => @account_email }
+      :type => params[:institution][:type].downcase, :email => @account_email }
     query[:credentials] = JSON.generate(query[:credentials])
+    plaid_test_credentials query
     query
   end
+
+  def plaid_test_credentials query
+    if Rails.env.development?
+      query[:client_id] = "test_id"
+      query[:secret] = "test_secret"
+    end
+    query
+  end
+
 end
 

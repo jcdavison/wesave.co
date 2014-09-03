@@ -6,4 +6,5 @@
         %h4
           = pair["question"]
         = f.text_field "answer", placeholder: "your answer"
+        = f.hidden_field "institution_name", value: @institution
       = f.submit "Submit", class: "button success rounded medium center"

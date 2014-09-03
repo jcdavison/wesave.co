@@ -4,12 +4,10 @@ class Plaid
     @api_server = 'https://tartan.plaid.com'
     @client_id = PLAID_CLIENT_ID
     @secret = PLAID_SECRET
-    @account_email = PLAID_ACCOUNT_EMAIL
   end
 
   def self.institution_names
-    institutions = self.institutions
-    institutions.map {|i| i["name"] }
+    self.institutions.map {|i| i["name"] }
   end
 
   def self.institutions
@@ -17,20 +15,20 @@ class Plaid
   end
 
   def self.mfa_details
-    institutions = self.institutions
-    institutions.inject({}) do |hash, element| 
+    self.institutions.inject({}) do |hash, element| 
       hash[element["name"]] = element["mfa"]
       hash
     end
   end
 
-  def initiate_authorization params
-    Excon.post("#{@api_server}/connect", query: connect_query(params))
+  def initiate_auth params, user_email
+    Excon.post("#{@api_server}/connect",
+               query: connect_query(params, user_email))
   end
 
   def mfa_step params, institution
     query = mfa_query(params, institution.token)
-    query = set_type(query, institution.name)
+    query = type_if_sandbox!(query, institution.name)
     Excon.post("#{@api_server}/connect/step", query: query)
   end
 
@@ -45,7 +43,7 @@ class Plaid
     query
   end
 
-  def connect_query params
+  def connect_query params, user_email
     query = { 
       :client_id => client_id,
       :secret => secret,
@@ -54,7 +52,8 @@ class Plaid
         :password => params[:institution][:password],
         :pin => params[:institution][:pin]
         }, 
-      :type => params[:institution][:type].downcase, :email => @account_email 
+      :type => params[:institution][:type].downcase,
+      :email => user_email 
     }
     query[:credentials] = JSON.generate(query[:credentials])
     plaid_test_credentials query
@@ -62,19 +61,18 @@ class Plaid
   end
 
   def plaid_test_credentials query
-    if Rails.env.development?
+    if query[:username] = "plaid_test"
       query[:client_id] = "test_id"
       query[:secret] = "test_secret"
     end
     query
   end
 
-  def set_type query, name
-    if Rails.env.development?
+  def type_if_sandbox! query, name
+    # the api requires this in sandbox mode
+    if query[:username] = "plaid_test"
       query[:type] = name
     end
     query
   end
-
 end
-

@@ -38,6 +38,11 @@ class InstitutionsController < ApplicationController
       redirect_to step_path(mfa: body["mfa"], 
                             institution_name: institution_name)
     elsif response.status == 200
+      institution = current_user.institutions.find do |i|
+        i.name == institution_name
+      end
+      institution.valid_token = true
+      institution.save
       redirect_to home_path
     else
       message = "There was a problem, try again or contact John."

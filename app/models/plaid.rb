@@ -26,23 +26,6 @@ class Plaid
                query: connect_query(params, user_email))
   end
 
-  def mfa_step params, institution
-    query = mfa_query(params, institution.token)
-    query = type_if_sandbox!(query, institution.name)
-    Excon.post("#{@api_server}/connect/step", query: query)
-  end
-
-  def mfa_query params, token
-    query = { 
-      :client_id => client_id,
-      :secret => secret,
-      :mfa => params[:mfa][:answer],
-      :access_token => token
-      }
-    plaid_test_credentials query
-    query
-  end
-
   def connect_query params, user_email
     query = { 
       :client_id => client_id,
@@ -60,17 +43,46 @@ class Plaid
     query
   end
 
+  def mfa_step params, institution
+    query = mfa_query(params, institution.token)
+    query = type_if_sandbox!(query, institution.name)
+    Excon.post("#{@api_server}/connect/step", query: query)
+  end
+
+  def mfa_query params, token
+    query = { 
+      :client_id => client_id,
+      :secret => secret,
+      :mfa => params[:mfa][:answer],
+      :access_token => token
+      }
+    plaid_test_credentials query
+    query
+  end
+
   def plaid_test_credentials query
-    if query[:username] = "plaid_test"
-      query[:client_id] = "test_id"
-      query[:secret] = "test_secret"
+    credentials = JSON.parse(query[:credentials]) if query[:credentials]
+    # we have an access token or username
+    if query[:access_token] == "test"
+      set_sandbox_api query
+    elsif credentials && credentials[:username] == "plaid_test"
+      set_sandbox_api query
     end
+    query
+  end
+
+  def set_sandbox_api query
+    query[:client_id] = "test_id"
+    query[:secret] = "test_secret"
     query
   end
 
   def type_if_sandbox! query, name
     # the api requires this in sandbox mode
-    if query[:username] = "plaid_test"
+    credentials = JSON.parse(query[:credentials]) if query[:credentials]
+    if query[:access_token] == "test"
+      query[:type] = name
+    elsif credentials && credentials[:username] == "plaid_test"
       query[:type] = name
     end
     query

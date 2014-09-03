@@ -1,2 +1,15 @@
-%h3
-  placeholder view
+.row
+  .large-8.columns.large-centered.panel
+    Welcome to WeSave.  This app is very much in limited Alpha.  I take all precautions to safegaurd your banking information.  I never store you personal passwords, pins or usernames.  I use that information to get a token from an api, I store that token.
+.row
+  .large-6.columns.large-centered
+    %h4 Your Connected Banks
+    - @institutions.each do |i|
+      = i.name
+    - if @institutions.empty?
+      Looks like you need to add a few.
+    %h4.center
+      = link_to "Add an account.", begin_path
+
+
+

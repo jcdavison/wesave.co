@@ -1,4 +1,5 @@
 class InstitutionsController < ApplicationController
+  before_filter :authenticate_user!
 
   def begin
     @institutions = Plaid.institution_names.select {|i| i.match /usaa/i }

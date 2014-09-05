@@ -1,5 +1,6 @@
 class Institution < ActiveRecord::Base
   belongs_to :user
+  has_many :account_balances
   validates_presence_of :token, :name
   before_save :downcase_name
 

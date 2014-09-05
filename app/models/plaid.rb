@@ -1,5 +1,5 @@
 class Plaid
-  attr_accessor :client_id, :secret
+  attr_accessor :client_id, :secret, :api_server
   def initialize
     @api_server = 'https://tartan.plaid.com'
     @client_id = PLAID_CLIENT_ID
@@ -86,5 +86,26 @@ class Plaid
       query[:type] = name
     end
     query
+  end
+
+  def query_object institution
+    {access_token: institution.token , client_id: @client_id , secret: @secret} 
+  end
+
+  def self.get_user_data institution
+    plaid = Plaid.new
+    query = plaid.query_object institution
+    JSON.parse(Excon.get("#{plaid.api_server}/connect", query: query ).body)
+  end
+
+  def self.summary account_data
+    account_data["accounts"].map do |account|
+      { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"]}
+    end
+  end
+
+  def self.get_account_summary institution
+    account_data = self.get_user_data institution
+    account_summaries = self.summary account_data
   end
 end

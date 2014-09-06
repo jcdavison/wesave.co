@@ -1,1 +1,26 @@
-= @budget_events.inspect
+%h4.center
+  Please input your budget events.
+.row
+  .large-8.columns.large-centered
+    - @budget_events.each do |event|
+      = event.description
+      = event.value
+      = event.month_day
+.row
+  .large-5.columns.large-centered
+    = form_for :budget_event, url: "/events", action: "POST" do |form|
+      
+      = form.text_field :description, placeholder: "event description"
+      .row.collapse
+        .large-6.columns
+          %span.prefix
+            Value
+        .large-6.columns
+          = form.number_field :value
+        .large-6.columns
+          %span.prefix
+            Day of the Month
+        .large-6.columns
+          = form.number_field :month_day
+      .center
+        = form.submit "create", class: "button tiny success radius"

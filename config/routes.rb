@@ -10,7 +10,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/events/', to: 'budget_events#index', as: "events"
+  get '/events', to: 'budget_events#index', as: 'events'
+  post '/events', to: 'budget_events#create', as: 'create_event'
   get '/home', to: 'home#index'
   get '/begin', to: 'institutions#begin'
   get '/step', to: 'institutions#step'

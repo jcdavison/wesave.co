@@ -5,7 +5,11 @@ class BudgetEventsController < ApplicationController
   end
 
   def create
-
+    budget_event = params[:budget_event]
+    current_user.budget_events.create(description: budget_event[:description], 
+                      value: budget_event[:value],
+                      month_day: budget_event[:month_day])
+    redirect_to events_path
   end
 
   def update

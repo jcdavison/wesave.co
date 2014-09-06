@@ -3,9 +3,11 @@
     Welcome to WeSave.  This app is very much in limited Alpha.  I take all precautions to safegaurd your banking information.  I never store you personal passwords, pins or usernames.  I use that information to get a token from an api, I store that token.
 .row
   .large-6.columns.large-centered
+    .center
+      = link_to "Add Budget Details", events_path, class: "button success radius medium center"
     %h4 Your Connected Banks
-    - @institutions.each do |i|
-      = i.name
+    - @institutions.each do |institution|
+      = institution.name
     - if @institutions.empty?
       Looks like you need to add a few.
     %h4.center

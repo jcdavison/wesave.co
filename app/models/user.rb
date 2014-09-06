@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :institutions, dependent: :destroy
+  has_many :budget_events, dependent: :destroy
 
 
   def institutions_with_active_tokens

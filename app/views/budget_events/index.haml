@@ -1,15 +1,5 @@
 %h4.center
-  Please input your budget events.
-.row
-  .large-8.columns.large-centered
-    %h3
-      Revenues
-    = render partial: "shared/budget_event_info", collection: @revenues, as: :budget_event
-.row
-  .large-8.columns.large-centered
-    %h3
-      Expenses
-    = render partial: "shared/budget_event_info", collection: @expenses, as: :budget_event
+  Please input your fixed revenues and expenses.
 .row
   .large-11.columns.large-centered
     = form_for :budget_event, url: '/events', action: 'POST' do |form|
@@ -31,3 +21,19 @@
           = form.number_field :month_day, placeholder: 'i.e, 3'
         .large-1.columns
           = form.submit "create", class: "button tiny success radius"
+.row
+  .large-8.columns.large-centered.panel
+    .center
+      your daily variable spend is calculated as: $n
+    .center
+      your total fixed expenses are calculated as: $n
+.row
+  .large-8.columns.large-centered
+    %h3
+      Revenues
+    = render partial: "shared/budget_event_info", collection: @revenues, as: :budget_event
+.row
+  .large-8.columns.large-centered
+    %h3
+      Expenses
+    = render partial: "shared/budget_event_info", collection: @expenses, as: :budget_event

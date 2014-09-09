@@ -31,6 +31,13 @@ class InstitutionsController < ApplicationController
     route_mfa_step response, body, institution.name
   end
 
+  def update
+    institution = Institution.find(params[:id])
+    institution.account_of_concern = params[:institution][:account_of_concern]
+    institution.save
+    redirect_to authenticated_root_path
+  end
+
   private
 
   def route_mfa_step response, body, institution_name

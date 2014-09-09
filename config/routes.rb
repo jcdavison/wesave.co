@@ -18,4 +18,5 @@ Rails.application.routes.draw do
   get '/step', to: 'institutions#step'
   post '/authorize', to: 'institutions#authorize'
   post '/mfa', to: 'institutions#mfa'
+  post '/institutions/:id', to: 'institutions#update', as: 'update_institution'
 end

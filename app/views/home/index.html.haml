@@ -7,7 +7,18 @@
       = link_to "Add Budget Details", events_path, class: "button success radius medium center"
     %h4 Your Connected Banks
     - @institutions.each do |institution|
-      = institution.name
+      .border
+        %h3.center
+          = institution.name
+        - if institution.account_balances && ! institution.account_of_concern
+          Please select this institutions 'account of concern' it should be your primary checking account.
+          = form_for :institution, url: update_institution_path(institution)  do |form|
+            - institution.account_balances.each do |balance|
+              .center
+                = form.radio_button "account_of_concern", balance.function
+                = balance.function
+            .center
+              = form.submit "set account", class: "button success tiny radius center"
     - if @institutions.empty?
       Looks like you need to add a few.
     %h4.center

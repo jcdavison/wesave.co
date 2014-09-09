@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   get '/events', to: 'budget_events#index', as: 'events'
   post '/events', to: 'budget_events#create', as: 'create_event'
+  delete '/events/:id', to: 'budget_events#destroy', as: 'destroy_event'
   get '/home', to: 'home#index'
   get '/begin', to: 'institutions#begin'
   get '/step', to: 'institutions#step'

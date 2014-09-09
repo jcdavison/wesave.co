@@ -2,25 +2,32 @@
   Please input your budget events.
 .row
   .large-8.columns.large-centered
-    - @budget_events.each do |event|
-      = event.description
-      = event.value
-      = event.month_day
+    %h3
+      Revenues
+    = render partial: "shared/budget_event_info", collection: @revenues, as: :budget_event
 .row
-  .large-5.columns.large-centered
-    = form_for :budget_event, url: "/events", action: "POST" do |form|
-      
-      = form.text_field :description, placeholder: "event description"
+  .large-8.columns.large-centered
+    %h3
+      Expenses
+    = render partial: "shared/budget_event_info", collection: @expenses, as: :budget_event
+.row
+  .large-11.columns.large-centered
+    = form_for :budget_event, url: '/events', action: 'POST' do |form|
       .row.collapse
-        .large-6.columns
+        .large-2.columns
+          %span.prefix
+            Description
+        .large-2.columns
+          = form.text_field :description, placeholder: 'i.e., rent'
+        .large-1.columns
           %span.prefix
             Value
-        .large-6.columns
-          = form.number_field :value
-        .large-6.columns
+        .large-2.columns
+          = form.number_field :value, placeholder: 'i.e., -1500'
+        .large-2.columns
           %span.prefix
             Day of the Month
-        .large-6.columns
-          = form.number_field :month_day
-      .center
-        = form.submit "create", class: "button tiny success radius"
+        .large-2.columns
+          = form.number_field :month_day, placeholder: 'i.e, 3'
+        .large-1.columns
+          = form.submit "create", class: "button tiny success radius"

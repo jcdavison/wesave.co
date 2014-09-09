@@ -1,7 +1,8 @@
 class BudgetEventsController < ApplicationController
   before_filter :authenticate_user!
   def index
-    @budget_events = current_user.budget_events 
+    @revenues = current_user.budget_events.revenues
+    @expenses = current_user.budget_events.expenses
   end
 
   def create
@@ -17,7 +18,8 @@ class BudgetEventsController < ApplicationController
   end
 
   def destroy
-
+    BudgetEvent.find(params[:id]).destroy
+    redirect_to events_path
   end
 end
 

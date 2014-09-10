@@ -2,7 +2,14 @@
   .large-8.columns.large-centered.panel
     Welcome to WeSave.  This app is very much in limited Alpha.  I take all precautions to safegaurd your banking information.  I never store you personal passwords, pins or usernames.  I use that information to get a token from an api, I store that token.
 .row
-  .large-6.columns.large-centered
+  - unless current_user.phone_number
+    .large-6.columns.large-centered
+      = form_for :user, url: update_user_path, method: :put do |f|
+        = f.text_field :phone_number, placeholder: "your phone number"
+        .center
+          = f.submit "submit", class: "button success radius tiny"
+
+  - if current_user.phone_number
     %h4 Your Connected Banks
     - @institutions.each do |institution|
       .border

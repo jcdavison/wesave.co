@@ -43,4 +43,9 @@ class FinancialSummary < ActiveRecord::Base
   def current_budget_status
     (actual_current_balance - projected_current_balance).round(2)
   end
+
+  def set_value!
+    self.value = current_budget_status
+    self.save
+  end
 end

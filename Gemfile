@@ -11,6 +11,7 @@ gem 'excon'
 gem 'quiet_assets', '~> 1.0.3'
 gem 'json'
 gem 'pry'
+gem 'twilio-ruby', '~> 3.11'
 
 # assets and various sundries
 gem 'foundation-rails'

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     unauthenticated do
       root 'devise/sessions#new', as: :unauthenticated_root
     end
+    put '/phones' => 'users/users#update', as: 'update_user'
   end
 
   get '/events', to: 'budget_events#index', as: 'events'

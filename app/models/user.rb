@@ -7,6 +7,11 @@ class User < ActiveRecord::Base
   has_many :budget_events, dependent: :destroy
   has_many :financial_summaries, dependent: :destroy
 
+  def set_phone number
+    self.phone_number = number
+    self.save
+  end
+
   def institutions_with_active_tokens
     self.institutions.valid_tokens
   end

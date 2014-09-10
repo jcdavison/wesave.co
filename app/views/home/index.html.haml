@@ -3,8 +3,6 @@
     Welcome to WeSave.  This app is very much in limited Alpha.  I take all precautions to safegaurd your banking information.  I never store you personal passwords, pins or usernames.  I use that information to get a token from an api, I store that token.
 .row
   .large-6.columns.large-centered
-    .center
-      = link_to "Add Budget Details", events_path, class: "button success radius medium center"
     %h4 Your Connected Banks
     - @institutions.each do |institution|
       .border
@@ -19,10 +17,17 @@
                 = balance.function
             .center
               = form.submit "set account", class: "button success tiny radius center"
+        - if institution.account_of_concern
+          .center
+            primary account is:
+            = institution.account_of_concern
+          .center
+            = link_to "Add Budget Details", events_path, class: "button success radius small center"
     - if @institutions.empty?
       Looks like you need to add a few.
-    %h4.center
-      = link_to "Add an account.", begin_path
+    - if current_user.institutions.empty?
+      %h4.center
+        = link_to "Add an account.", begin_path
 
 
 

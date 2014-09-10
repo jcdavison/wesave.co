@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
   has_many :institutions, dependent: :destroy
   has_many :budget_events, dependent: :destroy
 
-
   def institutions_with_active_tokens
     self.institutions.valid_tokens
   end
@@ -21,4 +20,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  def balance_of_interest
+    #this method is way gross, code is gonna need some refactoring
+    institution = self.institutions.valid_tokens.first
+    institution.account_balances.select {|balance| balance.function == institution.account_of_concern }.first
+  end
 end

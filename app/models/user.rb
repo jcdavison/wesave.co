@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   has_many :institutions, dependent: :destroy
   has_many :budget_events, dependent: :destroy
+  has_many :financial_summaries, dependent: :destroy
 
   def institutions_with_active_tokens
     self.institutions.valid_tokens
@@ -24,5 +25,13 @@ class User < ActiveRecord::Base
     #this method is way gross, code is gonna need some refactoring
     institution = self.institutions.valid_tokens.first
     institution.account_balances.select {|balance| balance.function == institution.account_of_concern }.first
+  end
+
+  def revenues
+    self.budget_events.select {|event| event.value >= 0}
+  end
+
+  def expenses
+    self.budget_events.select {|event| event.value < 0}
   end
 end

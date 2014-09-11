@@ -3,6 +3,8 @@ class BudgetEventsController < ApplicationController
   def index
     @revenues = current_user.budget_events.revenues
     @expenses = current_user.budget_events.expenses
+    @financial_summary = current_user.financial_summaries.new
+    @financial_summary.set_value!
   end
 
   def create

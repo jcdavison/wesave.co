@@ -9,8 +9,7 @@
         .center
           = f.submit "submit", class: "button success radius tiny"
 
-  - if current_user.phone_number
-    %h4 Your Connected Banks
+  - if current_user.phone_number 
     - @institutions.each do |institution|
       .border
         %h3.center
@@ -31,10 +30,8 @@
           .center
             = link_to "Add Budget Details", events_path, class: "button success radius small center"
     - if @institutions.empty?
-      Looks like you need to add a few.
-    - if current_user.institutions.empty?
       %h4.center
-        = link_to "Add an account.", begin_path
+        = link_to "Add an account.", begin_path, class: "button radius success large"
 
 
 

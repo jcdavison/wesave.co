@@ -2,7 +2,9 @@ class FinancialSummary < ActiveRecord::Base
   belongs_to :user
 
   def budget
-    self.user.revenues.map(&:value).reduce(:+)
+    revenues = self.user.revenues
+    return 0 if revenues.empty?
+    revenues.map(&:value).reduce(:+)
   end
 
   def discretionary_allowance
@@ -18,13 +20,16 @@ class FinancialSummary < ActiveRecord::Base
   end
 
   def fixed_expenses
-    self.user.expenses.map(&:value).reduce(:+)
+    expenses = self.user.expenses
+    return 0 if expenses.empty?
+    expenses.map(&:value).reduce(:+)
   end
 
   def expenses_to_date
     expenses_so_far = self.user.expenses.select do |exp|
       exp.month_day <= Time.now.day
     end
+    return 0 if expenses_so_far.empty?
     expenses_so_far.map(&:value).reduce(:+)
   end
 

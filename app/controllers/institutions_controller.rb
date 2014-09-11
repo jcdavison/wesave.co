@@ -2,7 +2,7 @@ class InstitutionsController < ApplicationController
   before_filter :authenticate_user!
 
   def begin
-    @institutions = Plaid.institution_names.select {|i| i.match /usaa/i }
+    @institutions = Plaid.institutions.keys.select {|i| i.match /usaa|wells fargo/i }
   end
 
   def authorize

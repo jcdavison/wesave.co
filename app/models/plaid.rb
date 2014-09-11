@@ -10,9 +10,6 @@ class Plaid
     self.institutions.map {|i| i["name"] }
   end
 
-  def self.institutions
-    JSON.parse(Excon.get('https://tartan.plaid.com/institutions').body)
-  end
 
   def self.mfa_details
     self.institutions.inject({}) do |hash, element| 
@@ -23,24 +20,38 @@ class Plaid
 
   def initiate_auth params, user_email
     Excon.post("#{@api_server}/connect",
-               query: connect_query(params, user_email))
+               query: connect_query(params[:institution], user_email))
   end
 
-  def connect_query params, user_email
+  def connect_query institution, user_email
     query = { 
       :client_id => client_id,
       :secret => secret,
       :credentials => {
-        :username => params[:institution][:username], 
-        :password => params[:institution][:password],
-        :pin => params[:institution][:pin]
+        :username => institution[:username], 
+        :password => institution[:password],
+        :pin => institution[:pin]
         }, 
-      :type => params[:institution][:type].downcase,
+      :type => set_type(institution[:type]),
       :email => user_email 
     }
     query[:credentials] = JSON.generate(query[:credentials])
     plaid_test_credentials query
     query
+  end
+
+  def set_type institution
+    Plaid.institutions[institution]
+  end
+
+  def self.institutions
+    { "American Express" => "amex",
+      "Bank of America" => "bofa", 
+      "Chase" => "chase", 
+      "Citi" => "citi", 
+      "US Bank" => "us",
+      "USAA" => "usaa",
+      "Wells Fargo" => "wells" }
   end
 
   def mfa_step params, institution
@@ -100,7 +111,7 @@ class Plaid
 
   def self.summary account_data
     account_data["accounts"].map do |account|
-      { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"]}
+      { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"] }
     end
   end
 

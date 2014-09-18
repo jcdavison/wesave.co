@@ -19,6 +19,15 @@ namespace :users do
       Sms.send! love_note, user.phone_number
     end
   end
+
+  desc 'Send Joe a text'
+  task :sendtojoe => :environment do
+    joe = User.find_by_email("mellin.joe@gmail.com")
+    joe.collect_balance_data
+    balance = joe.last_balance
+    message = "Good Morning Joe, your balance is #{balance.value}"
+    sms = Sms.new message joe.phone_number
+  end
 end
 
 

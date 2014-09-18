@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   end
 
   def balance_of_interest
-    #this method is way gross, code is gonna need some refactoring
+    #this method is way gross, logic is gonna need some rethinking
     institution = self.institutions.valid_tokens.first
     institution.account_balances.select {|balance| balance.function == institution.account_of_concern }.first
   end
@@ -38,5 +38,9 @@ class User < ActiveRecord::Base
 
   def expenses
     self.budget_events.select {|event| event.value < 0}
+  end
+
+  def last_balance
+    self.institutions.valid_tokens.first.account_balances.last
   end
 end

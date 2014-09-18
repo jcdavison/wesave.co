@@ -26,7 +26,7 @@ namespace :users do
     joe.collect_balance_data
     balance = joe.last_balance
     message = "Good Morning Joe, your balance is #{balance.value}"
-    sms = Sms.new message joe.phone_number
+    Sms.send! message, joe.phone_number
   end
 end
 

@@ -1,4 +1,6 @@
 class Account < ActiveRecord::Base
   belongs_to :institution
-  validates_presence_of :bank_id, :financial_type, :name, :institution_id
+  has_many :balances
+  has_many :transactions
+  validates_presence_of :acct_id, :financial_type, :name, :institution_id
 end

@@ -26,3 +26,8 @@ gem 'rails_12factor', group: :production
 
 # userauthorization
 gem 'devise', '~> 3.3.0'
+
+
+group :development, :test do
+  gem 'railroady'
+end

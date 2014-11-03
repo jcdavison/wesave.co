@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140910035337) do
+ActiveRecord::Schema.define(version: 20141103184021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,23 @@ ActiveRecord::Schema.define(version: 20140910035337) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "function"
+  end
+
+  create_table "accounts", force: true do |t|
+    t.string   "acct_id"
+    t.string   "financial_type"
+    t.string   "name"
+    t.integer  "institution_id"
+    t.boolean  "primary",        default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "balances", force: true do |t|
+    t.integer  "account_id"
+    t.float    "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "budget_events", force: true do |t|
@@ -49,6 +66,15 @@ ActiveRecord::Schema.define(version: 20140910035337) do
     t.datetime "updated_at"
     t.boolean  "valid_token",        default: false
     t.string   "account_of_concern"
+  end
+
+  create_table "transactions", force: true do |t|
+    t.decimal  "amount"
+    t.string   "name"
+    t.datetime "date"
+    t.integer  "account_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", force: true do |t|

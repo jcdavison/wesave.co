@@ -1,7 +1,7 @@
 class CreateAccounts < ActiveRecord::Migration
   def change
     create_table :accounts do |t|
-      t.string :bank_id
+      t.string :acct_id
       t.string :financial_type
       t.string :name
       t.integer :institution_id

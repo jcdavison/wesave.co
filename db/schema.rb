@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20141103180354) do
   end
 
   create_table "accounts", force: true do |t|
-    t.string   "bank_id"
+    t.string   "acct_id"
     t.string   "financial_type"
     t.string   "name"
     t.integer  "institution_id"

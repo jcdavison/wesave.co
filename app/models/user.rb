@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :institutions, dependent: :destroy
+  has_many :messages, dependent: :destroy
 
   def set_phone number
     self.phone_number = number
@@ -50,5 +51,12 @@ class User < ActiveRecord::Base
           financial_type: account_obj['type'], name: account_obj['meta']['name']  
       end
     end
+  end
+
+  def primary_account
+    institutions.inject([]) do |account, institution|
+      institution.accounts.each {|a| account.push(a) if a.primary == true}
+      account
+    end.pop
   end
 end

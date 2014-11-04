@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :institutions, dependent: :destroy
@@ -54,23 +52,5 @@ class User < ActiveRecord::Base
           financial_type: account_obj['type'], name: account_obj['meta']['name']  
       end
     end
-  end
-
-  def balance_of_interest
-    #this method is way gross, logic is gonna need some rethinking
-    institution = self.institutions.valid_tokens.first
-    institution.account_balances.select {|balance| balance.function == institution.account_of_concern }.first
-  end
-
-  def revenues
-    self.budget_events.select {|event| event.value >= 0}
-  end
-
-  def expenses
-    self.budget_events.select {|event| event.value < 0}
-  end
-
-  def last_balance
-    self.institutions.valid_tokens.first.account_balances.last
   end
 end

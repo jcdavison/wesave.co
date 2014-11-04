@@ -7,11 +7,11 @@ namespace :users do
     end
   end
 
-  task :send_sms => do
+  task :send_sms => :environment do
     users = User.all.select {|user| user.institutions_with_active_tokens}
     users.each do |user|
-      message = Author.perform(user.primary_account).create_message
-      Sms.send message, user.number
+      message = Author.perform(user.primary_account)
+      Sms.send message, user.phone_number
     end
   end
 end

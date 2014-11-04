@@ -11,7 +11,7 @@ class Sms
 
   def self.send message, send_to_number
     sms = Sms.new send_to_number
-    payload = {from: from, to: to, body: message}
+    payload = {from: sms.from, to: sms.to, body: message}
     sms.client.account.messages.create payload
   end
 end

@@ -14,12 +14,12 @@
       .border
         %h3.center
           = institution.name
-        - if institution && ! institution.account_of_concern
+        - if institution && ! institution.has_primary?
           Please select this institutions 'account of concern' it should be your primary checking account.
           = form_for :institution, url: update_institution_path(institution)  do |form|
             - institution.accounts.each do |account|
               .center
-                = form.radio_button "account_of_concern", account.primary
+                = form.radio_button "account_of_concern", account.name
                 = account.name
             .center
               = form.submit "set account", class: "button success tiny radius center"

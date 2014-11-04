@@ -9,4 +9,14 @@ class Institution < ActiveRecord::Base
   def downcase_name
    self.name = self.name.downcase
   end
+
+  def set_primary account_name
+    account = accounts.find_by_name(account_name)
+    account.primary = true
+    account.save
+  end
+
+  def has_primary?
+    accounts.any? {|account| account.primary == true}
+  end
 end

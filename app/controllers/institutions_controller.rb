@@ -33,9 +33,7 @@ class InstitutionsController < ApplicationController
 
   def update
     institution = Institution.find(params[:id])
-    institution.account_of_concern = params[:institution][:account_of_concern]
-    institution.save
-    summary = current_user.financial_summaries.new
+    institution.set_primary params[:institution][:account_of_concern]
     redirect_to authenticated_root_path
   end
 
@@ -51,7 +49,7 @@ class InstitutionsController < ApplicationController
       end
       institution.valid_token = true
       institution.save
-      current_user.collect_balance_data
+      current_user.collect_initial_data
       redirect_to home_path
     else
       message = "There was a problem, try again or contact John."

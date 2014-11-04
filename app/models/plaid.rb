@@ -114,4 +114,10 @@ class Plaid
       { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"] }
     end
   end
+
+  def self.destroy_user token 
+    plaid = Plaid.new
+    query = { access_token: token, secret: plaid.secret, client_id: plaid.client_id }
+    JSON.parse(Excon.delete("#{plaid.api_server}/connect", query: query ).body)
+  end
 end

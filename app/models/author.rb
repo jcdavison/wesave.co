@@ -13,10 +13,15 @@ class Author
   end
 
   def create_message
-    [:month_to_day_message, :previous_24_message, :avg_daily_spend_message, :projected_daily_spend_message ].each do |method|
+    [ :month_to_day_message, :previous_24_message, :avg_daily_spend_message,
+      :projected_daily_spend_message, :current_balance_message ].each do |method|
       message.push self.send method
     end
-    self.message = message.join(" ")
+    message.join(" ")
+  end
+
+  def current_balance_message
+    "You currently have an account balance of $#{most_recent_balance}."
   end
 
   def month_to_day_message

@@ -6,4 +6,12 @@ namespace :users do
       user.collect_initial_data
     end
   end
+
+  task :send_sms => :environment do
+    users = User.all.select {|user| user.institutions_with_active_tokens}
+    users.each do |user|
+      message = Author.perform(user.primary_account)
+      Sms.send message, user.phone_number
+    end
+  end
 end

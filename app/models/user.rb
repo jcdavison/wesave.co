@@ -2,8 +2,6 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :institutions, dependent: :destroy
-  has_many :budget_events, dependent: :destroy
-  has_many :financial_summaries, dependent: :destroy
 
   def set_phone number
     self.phone_number = number

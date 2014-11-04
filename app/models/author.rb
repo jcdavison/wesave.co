@@ -8,6 +8,10 @@ class Author
     @month_to_day_transactions = month_to_day_transactions
   end
 
+  def self.perform account
+    self.new(account).create_message
+  end
+
   def create_message
     [:month_to_day_message, :previous_24_message, :avg_daily_spend_message, :projected_daily_spend_message ].each do |method|
       message.push self.send method

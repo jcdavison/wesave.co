@@ -9,9 +9,9 @@ class Sms
     @to = send_to_number
   end
 
-  def self.send! message, send_to_number
+  def self.send message, send_to_number
     sms = Sms.new send_to_number
-    payload = {from: sms.from, to: sms.to, body: message}
+    payload = {from: from, to: to, body: message}
     sms.client.account.messages.create payload
   end
 end

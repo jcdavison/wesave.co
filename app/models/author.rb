@@ -41,7 +41,7 @@ class Author
   end
 
   def most_recent_balance
-    account.balances.last.value.to_f.abs
+    account.balances.last.value.to_f.round(2).abs
   end
 
   def projected_daily_spend
@@ -50,15 +50,15 @@ class Author
   end
 
   def avg_daily_spend
-    (sum_month_to_day / Time.now.day).abs
+    (sum_month_to_day / Time.now.day).round(2).abs
   end
 
   def sum_month_to_day
-    month_to_day_transactions.map {|t| t.amount.to_f }.reduce(:+).abs
+    month_to_day_transactions.map {|t| t.amount.to_f }.reduce(:+).round(2).abs
   end
 
   def sum_previous_24_hours
-    previous_24_hrs_transactions.map {|t| t.amount.to_f }.reduce(:+).abs
+    previous_24_hrs_transactions.map {|t| t.amount.to_f }.reduce(:+).round(2).abs
   end
 
   def month_to_day_transactions

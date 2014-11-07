@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   end
 
   def institutions_with_active_tokens
-    self.institutions.valid_tokens
+    institutions.valid_tokens
   end
 
   def collect_initial_data

@@ -10,7 +10,7 @@ class Institution < ActiveRecord::Base
    self.name = self.name.downcase
   end
 
-  def set_primary account_name
+  def set_primary! account_name
     account = accounts.find_by_name(account_name)
     account.primary = true
     account.save

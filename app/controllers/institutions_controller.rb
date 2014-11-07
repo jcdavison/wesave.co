@@ -33,7 +33,7 @@ class InstitutionsController < ApplicationController
 
   def update
     institution = Institution.find(params[:id])
-    institution.set_primary params[:institution][:account_of_concern]
+    institution.set_primary! params[:institution][:account_of_concern]
     redirect_to authenticated_root_path
   end
 

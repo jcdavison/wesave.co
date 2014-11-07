@@ -16,12 +16,13 @@ class Account < ActiveRecord::Base
   end
 
   def projected_daily_spend
-    remaining_days = Time::days_in_month(Time.now.month, Time.now.year) - Time.now.day
-    (most_recent_balance / remaining_days).round(2).abs
+    remaining_days_in_month = Time::days_in_month(Time.now.month, Time.now.year) - Time.now.day
+    (most_recent_balance / remaining_days_in_month).round(2).abs
   end
 
   def avg_daily_spend
-    (sum_month_to_day / Time.now.day).round(2).abs
+    average_spend = (sum_month_to_day / Time.now.day) || 0
+    average_spend.round(2).abs
   end
 
   def sum_month_to_day

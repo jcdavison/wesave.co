@@ -47,7 +47,7 @@ class InstitutionsController < ApplicationController
         i.name == institution_name
       end
       institution.validate_token!
-      current_user.collect_initial_data
+      current_user.collect_banking_data
       redirect_to home_path
     else
       message = "There was a problem, try again or contact jd@startuplandia.io"

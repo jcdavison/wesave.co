@@ -9,14 +9,17 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def institutions_with_active_tokens
+  def active_institutions
     institutions.valid_tokens
   end
 
-  def collect_initial_data
-    institutions = self.institutions_with_active_tokens
-    institutions.each do |institution|
-      api_response = Plaid.get_data institution
+  def get_institution institution
+    Plaid.get_data institution
+  end
+
+  def collect_banking_data
+    self.active_institutions.each do |institution|
+      api_response = get_institution institution
       create_accounts institution, api_response['accounts']
       create_balances institution, api_response['accounts']
       create_transactions institution, api_response['transactions']

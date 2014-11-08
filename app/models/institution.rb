@@ -19,4 +19,9 @@ class Institution < ActiveRecord::Base
   def has_primary?
     accounts.any? {|account| account.primary == true}
   end
+
+  def validate_token!
+    self.valid_token = true
+    self.save
+  end
 end

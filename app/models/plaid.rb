@@ -6,24 +6,12 @@ class Plaid
     @secret = PLAID_SECRET
   end
 
-  def self.institution_names
-    self.institutions.map {|i| i["name"] }
-  end
-
-
-  def self.mfa_details
-    self.institutions.inject({}) do |hash, element| 
-      hash[element["name"]] = element["mfa"]
-      hash
-    end
-  end
-
   def initiate_auth params, user_email
     Excon.post("#{@api_server}/connect",
                query: connect_query(params[:institution], user_email))
   end
 
-  def connect_query institution, user_email
+  def connect_query institution, user_email, sandbox = false
     query = { 
       :client_id => client_id,
       :secret => secret,
@@ -36,12 +24,16 @@ class Plaid
       :email => user_email 
     }
     query[:credentials] = JSON.generate(query[:credentials])
-    plaid_test_credentials query
+    plaid_test_credentials query if sandbox == true
     query
   end
 
   def set_type institution
     Plaid.institutions[institution]
+  end
+
+  def self.institution_names
+    self.institutions.map {|i| i["name"] }
   end
 
   def self.institutions
@@ -100,24 +92,24 @@ class Plaid
   end
 
   def query_object institution
-    {access_token: institution.token , client_id: @client_id , secret: @secret} 
+    {access_token: institution.token , client_id: client_id , secret: secret} 
   end
 
-  def self.get_connect institution
+  def self.get_data institution
     plaid = Plaid.new
     query = plaid.query_object institution
     JSON.parse(Excon.get("#{plaid.api_server}/connect", query: query ).body)
-  end
-
-  def self.summary account_data
-    account_data["accounts"].map do |account|
-      { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"] }
-    end
   end
 
   def self.destroy_user token 
     plaid = Plaid.new
     query = { access_token: token, secret: plaid.secret, client_id: plaid.client_id }
     JSON.parse(Excon.delete("#{plaid.api_server}/connect", query: query ).body)
+  end
+
+  def self.summary account_data
+    account_data["accounts"].map do |account|
+      { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"] }
+    end
   end
 end

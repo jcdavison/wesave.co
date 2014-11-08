@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   def collect_initial_data
     institutions = self.institutions_with_active_tokens
     institutions.each do |institution|
-      api_response = Plaid.get_connect institution
+      api_response = Plaid.get_data institution
       create_accounts institution, api_response['accounts']
       create_balances institution, api_response['accounts']
       create_transactions institution, api_response['transactions']

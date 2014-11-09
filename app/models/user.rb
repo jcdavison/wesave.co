@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  attr_accessor :banking_data
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :institutions, dependent: :destroy
@@ -9,51 +10,39 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  def summary_data institution
+    @banking_data ||= extract_data Plaid.get_data institution
+  end
+
   def active_institutions
     institutions.valid_tokens
   end
 
-  def get_institution institution
-    Plaid.get_data institution
+  def update_banking_snapshot
+    create_institution_accounts
+    create_account_entities
   end
 
-  def collect_banking_data
-    self.active_institutions.each do |institution|
-      api_response = get_institution institution
-      create_accounts institution, api_response['accounts']
-      create_balances institution, api_response['accounts']
-      create_transactions institution, api_response['transactions']
+  def create_institution_accounts 
+    active_institutions.each do |institution|
+      account_data = summary_data institution
+      institution.create_accounts account_data
     end
   end
 
-  def create_transactions institution, transaction_data
-    transaction_data.each do |transaction|
-      account = institution.accounts.find_by_acct_id transaction['_account']
-      unless account.transactions.find_by_item_id transaction['_id']
-        date = Date.strptime transaction['date'], "%Y-%m-%d"
-        account.transactions.create amount: transaction['amount'], 
-          date: date, name: transaction['name'], item_id: transaction['_id']
+  def create_account_entities
+    active_institutions.each do |institution|
+      account_data = summary_data institution
+      institution.accounts.each do |account|
+        account.create_transactions account_data
+        account.create_balances account_data
       end
     end
   end
 
-  def create_balances institution, balances_data 
-    balances_data.each do |balance_obj|
-      account = institution.accounts.find_by_acct_id balance_obj['_id']
-      unless account.balances.find_by_item_id balance_obj['_item']
-        account.balances.create! value: balance_obj['balance']['current'],
-          item_id: balance_obj['_item'] 
-      end
-    end
-  end
-
-  def create_accounts institution, accounts_data
-    accounts_data.each do |account_obj|
-      unless institution.accounts.find_by_acct_id account_obj['_id']
-        institution.accounts.create acct_id: account_obj['_id'],
-          financial_type: account_obj['type'], name: account_obj['meta']['name']  
-      end
-    end
+  def extract_data api_response
+    {accounts: api_response['accounts'], 
+      transactions: api_response['transactions']}
   end
 
   def primary_account

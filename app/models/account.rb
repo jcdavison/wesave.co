@@ -4,6 +4,33 @@ class Account < ActiveRecord::Base
   has_many :transactions, dependent: :destroy
   validates_presence_of :acct_id, :financial_type, :name
 
+  def create_transactions data
+    data[:transactions].each do |transaction|
+      create_transaction transaction
+    end
+  end
+
+  def create_transaction transaction
+    unless transactions.find_by_item_id transaction['_id']
+      date = Date.strptime transaction['date'], "%Y-%m-%d"
+      transactions.create amount: transaction['amount'], 
+        date: date, name: transaction['name'], item_id: transaction['_id']
+    end
+  end
+
+  def create_balances data
+    data[:accounts].each do |account_summary|
+      create_balance account_summary
+    end
+  end
+
+  def create_balance account_summary
+    unless balances.find_by_item_id account_summary['_item']
+      balances.create! value: account_summary['balance']['current'],
+        item_id: account_summary['_item'] 
+    end
+  end
+
   def most_recent_balance
     balance = balances.last.value.to_f || 0
     balance.round(2).abs

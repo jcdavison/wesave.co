@@ -45,10 +45,6 @@ class User < ActiveRecord::Base
       transactions: api_response['transactions']}
   end
 
-  def create_account_details data
-    Account.generate_entities data
-  end
-
   def primary_account
     institutions.inject([]) do |account, institution|
       institution.accounts.each {|a| account.push(a) if a.primary == true}

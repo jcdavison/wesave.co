@@ -11,9 +11,7 @@ class Institution < ActiveRecord::Base
   end
 
   def set_primary! account_name
-    account = accounts.find_by_name(account_name)
-    account.primary = true
-    account.save
+    accounts.find_by_name(account_name).update(primary: true)
   end
 
   def has_primary?

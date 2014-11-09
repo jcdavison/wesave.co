@@ -24,4 +24,13 @@ class Institution < ActiveRecord::Base
     self.valid_token = true
     self.save
   end
+
+  def create_accounts args
+    args[:accounts].each do |account|
+      unless self.accounts.find_by_acct_id account['_id']
+        self.accounts.create acct_id: account['_id'],
+          financial_type: account['type'], name: account['meta']['name']  
+      end
+    end
+  end
 end

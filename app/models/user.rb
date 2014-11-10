@@ -51,4 +51,13 @@ class User < ActiveRecord::Base
       account
     end.pop
   end
+
+  def self.update_all_banking_information
+    all.each do |user|
+      user.active_institutions.each do |institution|
+        user.summary_data(institution)
+        user.update_banking_snapshot
+      end
+    end
+  end
 end

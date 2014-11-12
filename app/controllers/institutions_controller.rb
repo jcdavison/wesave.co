@@ -32,8 +32,7 @@ class InstitutionsController < ApplicationController
 
   def update
     institution = Institution.find(params[:id])
-    # this is broken due to change in set_primary!
-    institution.set_primary! params[:institution][:account_of_concern]
+    institution.set_primary! params[:institution][:institutional_account_id]
     redirect_to authenticated_root_path
   end
 

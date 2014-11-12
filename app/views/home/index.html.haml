@@ -19,7 +19,8 @@
           = form_for :institution, url: update_institution_path(institution)  do |form|
             - institution.accounts.each do |account|
               .center
-                = form.radio_button "account_of_concern", account.name
+                = form.radio_button 'account_of_concern', account.name
+                = form.hidden_field 'institutional_account_id', value: account.institutional_account_id
                 = account.name
             .center
               = form.submit "set account", class: "button success tiny radius center"

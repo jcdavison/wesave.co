@@ -11,12 +11,13 @@ class Institution < ActiveRecord::Base
    self.name = self.name.downcase
   end
 
-  def set_primary! account_name
-    accounts.find_by_name(account_name).update(primary: true)
+  def set_primary! institutional_account_id 
+    account = accounts.find_by_institutional_account_id(institutional_account_id)
+    account.update(primary: true)
   end
 
   def has_primary?
-    accounts.any? {|account| account.primary == true}
+    accounts.find {|account| account.primary == true}
   end
 
   def validate_token!
@@ -25,8 +26,8 @@ class Institution < ActiveRecord::Base
 
   def create_accounts args
     args[:accounts].each do |account|
-      unless self.accounts.find_by_acct_id account['_id']
-        self.accounts.create acct_id: account['_id'],
+      unless self.accounts.find_by_institutional_account_id account['_id']
+        self.accounts.create institutional_account_id: account['_id'],
           financial_type: account['type'], name: account['meta']['name']  
       end
     end

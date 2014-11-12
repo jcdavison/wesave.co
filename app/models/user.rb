@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   end
 
   def summary_data institution
-    @banking_data ||= extract_data Plaid.get_data institution
+    @banking_data ||= Plaid.get_data institution
   end
 
   def active_institutions
@@ -40,10 +40,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def extract_data api_response
-    {accounts: api_response['accounts'], 
-      transactions: api_response['transactions']}
-  end
 
   def primary_account
     institutions.inject([]) do |account, institution|

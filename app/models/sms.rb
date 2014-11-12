@@ -1,5 +1,5 @@
 class Sms
-  attr_accessor :from, :to, :sid, :token
+  attr_accessor :from, :to, :sid, :token, :client
 
   def initialize send_to_number
     @sid = ENV['TWILIO_ACCOUNT_SID']

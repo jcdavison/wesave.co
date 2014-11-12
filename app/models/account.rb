@@ -53,7 +53,7 @@ class Account < ActiveRecord::Base
   end
 
   def sum_month_to_day
-    sum = month_to_day_transactions.map {|t| t.amount.to_f }.reduce(:+)
+    sum = month_to_day_transactions.map {|t| t.amount.to_f }.reduce(:+) || 0
     sum.round(2).abs
   end
 

@@ -16,15 +16,18 @@ class Author
   end
 
   def create_message
-    [:month_to_day_message, :previous_24_message, :avg_daily_spend_message,
-      :projected_daily_spend_message, :current_balance_message].each do |method|
+    [ :previous_24_message,
+      :month_to_day_message,
+      :current_balance_message,
+      :avg_daily_spend_message,
+      :projected_daily_spend_message].each do |method|
       message.push self.send method
     end
     message.join(" ")
   end
 
   def current_balance_message
-    "You currently have an account balance of $#{most_recent_balance}."
+    "You currently have $#{most_recent_balance}."
   end
 
   def most_recent_balance
@@ -32,7 +35,7 @@ class Author
   end
 
   def month_to_day_message
-    "Month to day you have spent $#{sum_month_to_day}." 
+    "You have spent $#{sum_month_to_day} so far this month."
   end
 
   def sum_month_to_day
@@ -40,7 +43,7 @@ class Author
   end
 
   def previous_24_message
-    "In the last 24 hours you have spent $#{sum_previous_24_hours}."
+    "You spent $#{sum_previous_24_hours} in the last 24hrs."
   end
 
   def sum_previous_24_hours
@@ -48,7 +51,7 @@ class Author
   end
 
   def avg_daily_spend_message
-    "You have spent on average $#{avg_daily_spend} per day."
+    "You spend on average $#{avg_daily_spend} per day."
   end
 
   def avg_daily_spend
@@ -56,7 +59,7 @@ class Author
   end
 
   def projected_daily_spend_message
-    "You can spend $#{projected_daily_spend} each day for the rest of the month."
+    "You should spend $#{projected_daily_spend} each day."
   end
 
   def projected_daily_spend

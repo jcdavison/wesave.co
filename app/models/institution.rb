@@ -5,7 +5,7 @@ class Institution < ActiveRecord::Base
   validates_uniqueness_of :token
   before_save :downcase_name
 
-  scope :valid_tokens, -> { where(valid_token: true)}
+  scope :valid_tokens, -> { where(valid_token: true) }
 
   def downcase_name
    self.name = self.name.downcase

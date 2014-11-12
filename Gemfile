@@ -30,4 +30,5 @@ gem 'devise', '~> 3.3.0'
 
 group :development, :test do
   gem 'railroady'
+  gem 'factory_girl_rails'
 end

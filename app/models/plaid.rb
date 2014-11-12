@@ -6,9 +6,9 @@ class Plaid
     @secret = PLAID_SECRET
   end
 
-  def initiate_auth params, user_email
+  def initiate_auth params, user_email, sandbox = false
     Excon.post("#{@api_server}/connect",
-               query: connect_query(params[:institution], user_email))
+               query: connect_query(params[:institution], user_email, sandbox))
   end
 
   def connect_query institution, user_email, sandbox = false

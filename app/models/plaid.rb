@@ -6,9 +6,9 @@ class Plaid
     @secret = PLAID_SECRET
   end
 
-  def initiate_auth params, user_email
+  def initiate_auth params, user_email, sandbox = false
     Excon.post("#{@api_server}/connect",
-               query: connect_query(params[:institution], user_email))
+               query: connect_query(params[:institution], user_email, sandbox))
   end
 
   def connect_query institution, user_email, sandbox = false
@@ -98,7 +98,8 @@ class Plaid
   def self.get_data institution
     plaid = Plaid.new
     query = plaid.query_object institution
-    JSON.parse(Excon.get("#{plaid.api_server}/connect", query: query ).body)
+    data = JSON.parse(Excon.get("#{plaid.api_server}/connect", query: query ).body)
+    plaid.extract data
   end
 
   def self.destroy_user token 
@@ -111,5 +112,10 @@ class Plaid
     account_data["accounts"].map do |account|
       { balance: account["balance"]["current"], institution: account["institution_type"], account_name: account["meta"]["name"], account_last4: account["meta"]["number"] }
     end
+  end
+
+  def extract data
+    {accounts: data['accounts'], 
+      transactions: data['transactions']}
   end
 end

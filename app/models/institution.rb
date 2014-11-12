@@ -20,8 +20,7 @@ class Institution < ActiveRecord::Base
   end
 
   def validate_token!
-    self.valid_token = true
-    self.save
+    update_attributes(valid_token: true)
   end
 
   def create_accounts args

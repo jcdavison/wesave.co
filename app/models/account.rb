@@ -4,6 +4,8 @@ class Account < ActiveRecord::Base
   has_many :transactions, dependent: :destroy
   validates_presence_of :institutional_account_id, :financial_type, :name
 
+  scope :have_primary, -> { where(primary: true)}
+
   def create_transactions data
     data[:transactions].each do |transaction|
       next unless transaction['_account'] == institutional_account_id
@@ -55,7 +57,7 @@ class Account < ActiveRecord::Base
   end
 
   def sum_month_to_day
-    sum = month_to_day_transactions.map {|t| t.amount.to_f }.reduce(:+) || 0
+    sum = month_to_day_transactions.expenses.map {|t| t.amount.to_f }.reduce(:+) || 0
     sum.round(2).abs
   end
 
@@ -66,7 +68,7 @@ class Account < ActiveRecord::Base
   end
 
   def sum_previous_24_hours
-    sum = previous_24_hrs_transactions.map {|t| t.amount.to_f }.reduce(:+) || 0 
+    sum = previous_24_hrs_transactions.expenses.map {|t| t.amount.to_f }.reduce(:+) || 0 
     sum.round(2).abs
   end
 end

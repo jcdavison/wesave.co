@@ -7,7 +7,8 @@ namespace :users do
   task :send_sms => :environment do
     users = User.all.select {|user| user.active_institutions}
     users.each do |user|
-      message = Author.perform(user.primary_account)
+      next unless account = user.primary_account
+      message = Author.perform(account)
       Sms.send message, user.phone_number
     end
   end

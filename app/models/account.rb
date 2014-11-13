@@ -6,6 +6,7 @@ class Account < ActiveRecord::Base
 
   def create_transactions data
     data[:transactions].each do |transaction|
+      next unless transaction['_account'] == institutional_account_id
       create_transaction transaction
     end
   end
@@ -20,6 +21,7 @@ class Account < ActiveRecord::Base
 
   def create_balances data
     data[:accounts].each do |account_summary|
+      next unless account_summary['_id'] == institutional_account_id
       create_balance account_summary
     end
   end

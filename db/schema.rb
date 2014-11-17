@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112205448) do
+ActiveRecord::Schema.define(version: 20141117174213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20141112205448) do
 
   create_table "balances", force: true do |t|
     t.integer  "account_id"
-    t.float    "value"
+    t.float    "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "item_id"

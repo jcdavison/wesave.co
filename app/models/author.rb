@@ -51,7 +51,7 @@ class Author
   end
 
   def avg_daily_spend_message
-    "You spend on average $#{avg_daily_spend} per day."
+    "You have spent $#{avg_daily_spend} per day."
   end
 
   def avg_daily_spend
@@ -59,7 +59,7 @@ class Author
   end
 
   def projected_daily_spend_message
-    "You should spend $#{projected_daily_spend} each day."
+    "You can spend $#{projected_daily_spend} daily for the rest of the month."
   end
 
   def projected_daily_spend

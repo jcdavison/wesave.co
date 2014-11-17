@@ -12,10 +12,18 @@ RSpec.describe Account, :type => :model do
   end
 
   context 'composition object Transaction' do
+    before do
+      @total_transactions = @data[:transactions].select {|t| t["_account"] == @account.institutional_account_id }.length    
+    end
+
     it 'create_transactions calls create_transaction only for transactions that match the institutional_account_id' do
-      qty_method_calls = @data[:transactions].select {|t| t["_account"] == @account.institutional_account_id }.length    
-      expect(@account).to receive(:create_transaction).exactly(qty_method_calls).times 
+      expect(@account).to receive(:create_transaction).exactly(@total_transactions).times 
       @account.create_transactions @data
+    end
+
+    it 'does not create duplicate transaction objects' do
+      2.times { @account.create_transactions @data }
+      expect(@account.transactions.count).to be @total_transactions
     end
   end
 

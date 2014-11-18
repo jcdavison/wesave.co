@@ -29,10 +29,7 @@ class Account < ActiveRecord::Base
   end
 
   def create_balance account_summary
-    unless balances.find_by_item_id account_summary['_item']
-      balances.create! amount: account_summary['balance']['current'],
-        item_id: account_summary['_item'] 
-    end
+    balances.create amount: account_summary['balance']['current']
   end
 
   def most_recent_balance

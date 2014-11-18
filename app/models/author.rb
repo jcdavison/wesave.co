@@ -59,7 +59,7 @@ class Author
   end
 
   def projected_daily_spend_message
-    "You can spend $#{projected_daily_spend} daily for the rest of the month."
+    "You should spend $#{projected_daily_spend} daily for the rest of the month."
   end
 
   def projected_daily_spend

@@ -33,17 +33,32 @@ class Plaid
   end
 
   def institution_map
-    { "American Express" => "amex",
-      "Bank of America" => "bofa", 
-      "Chase" => "chase", 
-      "Citi" => "citi", 
-      "US Bank" => "us",
-      "USAA" => "usaa",
-      "Wells Fargo" => "wells" }
+    { 'American Express' => 'amex',
+      'Bank of America' => 'bofa', 
+      'Chase' => 'chase', 
+      'Citi' => 'citi', 
+      'US Bank' => 'us',
+      'USAA' => 'usaa',
+      'Wells Fargo' => 'wells',
+      'Capital One 360' => 'capone360',
+      'Charles Schwab' => 'schwab',
+      'Fidelity' => 'fidelity' }
   end
 
   def self.available_institutions
-    Plaid.new().institution_map.keys.select {|i| i.match /usaa|wells fargo|amex/i }
+    institution_names.reject do |institution|
+      institution.match /bank of america|chase|citi|us bank/i
+    end
+  end
+
+  def self.institution_names
+    all_institutions.select do |institution|
+      institution['products'].include? 'connect'
+    end.map {|i| i['name']}
+  end
+
+  def self.all_institutions
+    JSON.parse(Excon.get(Plaid.new().api_server << "/institutions").body)
   end
 
   def mfa_step params, institution

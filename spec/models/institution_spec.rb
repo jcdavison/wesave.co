@@ -6,12 +6,6 @@ RSpec.describe Institution, :type => :model do
     @institution = @user.institutions.new(name: @params[:institution][:type], token: @api_data['access_token'])
   end
 
-  it 'ensures unique tokens' do
-    expect(@institution.save).to be true
-    duplicate_institution = @user.institutions.new(name: @params[:institution][:type], token: @api_data['access_token'])
-    expect(duplicate_institution.save).to be false
-  end
-
   context 'methods' do
     before do
       @institution.save

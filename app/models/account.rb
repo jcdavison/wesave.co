@@ -58,14 +58,14 @@ class Account < ActiveRecord::Base
     sum.round(2).abs
   end
 
-  def previous_24_hrs_transactions
-    begin_range = (Time.now - 24.hours)
+  def current_and_previous_day_transactions
+    begin_range = (Time.now - 24.hours).midnight
     end_range = Time.now
     month_to_day_transactions.where(date: begin_range..end_range)
   end
 
-  def sum_previous_24_hours
-    sum = previous_24_hrs_transactions.expenses.map {|t| t.amount.to_f }.reduce(:+) || 0 
+  def sum_current_and_previous_day_transactions
+    sum = current_and_previous_day_transactions.expenses.map {|t| t.amount.to_f }.reduce(:+) || 0 
     sum.round(2).abs
   end
 end

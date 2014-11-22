@@ -16,7 +16,7 @@ class Author
   end
 
   def create_message
-    [ :previous_24_message,
+    [ :current_and_previous_day_message,
       :month_to_day_message,
       :current_balance_message,
       :avg_daily_spend_message,
@@ -42,12 +42,12 @@ class Author
     account.sum_month_to_day
   end
 
-  def previous_24_message
-    "You spent $#{sum_previous_24_hours} in the last 24hrs."
+  def current_and_previous_day_message
+    "You spent $#{sum_current_and_previous_day_transactions} in the last 24hrs."
   end
 
-  def sum_previous_24_hours
-    account.sum_previous_24_hours
+  def sum_current_and_previous_day_transactions
+    account.sum_current_and_previous_day_transactions
   end
 
   def avg_daily_spend_message

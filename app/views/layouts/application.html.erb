@@ -25,6 +25,7 @@
       <div class="center">
         <b>Signed In as <%= current_user.email %></b>
         <%= link_to "sign out", destroy_user_session_path, method: :delete, class: "button info radius tiny" %>
+        <%= link_to "home", home_path, class: "button info radius tiny" %>
       </div>
     <% end %>
     <%= javascript_include_tag "application" %>

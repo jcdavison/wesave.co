@@ -8,8 +8,8 @@ class Plaid
   end
 
   def initiate_auth params, user_email
-    Excon.post("#{@api_server}/connect",
-               query: connect_query(params[:institution], user_email))
+    query = connect_query params[:institution], user_email
+    Excon.post("#{@api_server}/connect", query: query)
   end
 
   def connect_query institution, user_email
@@ -24,8 +24,18 @@ class Plaid
       :type => format_type(institution[:type]),
       :email => user_email 
     }
-    query[:credentials] = JSON.generate(query[:credentials])
+    query[:credentials] = process_credentials query[:credentials]
+    set_options_if_bofa query
     query
+  end
+
+  def process_credentials  credentials
+    credentials.delete :pin if credentials[:pin].empty?
+    JSON.generate credentials
+  end
+
+  def set_options_if_bofa query
+    query[:options] = JSON.generate({list: true}) if query[:type] == 'bofa'
   end
 
   def format_type institution
@@ -47,7 +57,7 @@ class Plaid
 
   def self.available_institutions
     institution_names.reject do |institution|
-      institution.match /bank of america|chase|citi|us bank/i
+      institution.match /chase|citi|us bank/i
     end
   end
 
@@ -75,11 +85,11 @@ class Plaid
   end
 
   def ensure_type_set! query, name
-    query[:type] = name if is_sandbox?
+    query[:type] = institution_map[name] if is_sandbox? query
   end
 
-  def is_sandbox?
-    client_id == 'test_id'
+  def is_sandbox? query
+    query[:access_token] == 'test'
   end
 
   def query_object institution

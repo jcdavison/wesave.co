@@ -2,7 +2,6 @@ class Institution < ActiveRecord::Base
   belongs_to :user
   has_many :accounts, dependent: :destroy
   validates_presence_of :token, :name
-  before_save :downcase_name
 
   scope :valid_tokens, -> { where(valid_token: true) }
 

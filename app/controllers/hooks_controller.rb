@@ -4,7 +4,7 @@ class HooksController < ApplicationController
     begin 
       process_hook params
     rescue => e
-      # do something intelligent with webhook errors
+      ErrorMailer.new_error(e, params).deliver
     end
     head 200, content_type: "text/html"
   end

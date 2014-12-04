@@ -22,11 +22,20 @@ class Plaid
         :pin => institution[:pin]
         }, 
       :type => format_type(institution[:type]),
-      :email => user_email 
+      :email => user_email,
+      :options => {
+        :webhook  => 'https://wesave.herokuapp.com/hooks',
+        :login_only => true
+      }
     }
     query[:credentials] = process_credentials query[:credentials]
     set_options_if_bofa query
+    jsonify_options query
     query
+  end
+
+  def jsonify_options query
+    query[:options] = JSON.generate(query[:options])
   end
 
   def process_credentials  credentials
@@ -35,7 +44,7 @@ class Plaid
   end
 
   def set_options_if_bofa query
-    query[:options] = JSON.generate({list: true}) if query[:type] == 'bofa'
+    query[:options].merge({list: true}) if query[:type] == 'bofa'
   end
 
   def format_type institution
@@ -107,6 +116,15 @@ class Plaid
     plaid = Plaid.new
     query = { access_token: token, secret: plaid.secret, client_id: plaid.client_id }
     JSON.parse(Excon.delete("#{plaid.api_server}/connect", query: query ).body)
+  end
+
+  def self.set_web_hook args
+    plaid = Plaid.new
+    query = { access_token: args[:token], secret: plaid.secret, client_id: plaid.client_id,
+      options: { webhook: args[:hook_url]}
+    }
+    query[:options] = JSON.generate(query[:options])
+    JSON.parse(Excon.patch("#{plaid.api_server}/connect", query: query).body)
   end
 
   def self.summary account_data

@@ -20,4 +20,5 @@ Rails.application.routes.draw do
   post '/authorize', to: 'institutions#authorize'
   post '/mfa', to: 'institutions#mfa'
   post '/institutions/:id', to: 'institutions#update', as: 'update_institution'
+  post '/hooks', to: 'hooks#hook'
 end

@@ -27,6 +27,6 @@ class HooksController < ApplicationController
   end
 
   def remove_transactions transaction_ids
-    transactions_ids.each {|id| Transaction.find(id).destroy}
+    transaction_ids.each {|id| Transaction.find(id).destroy}
   end
 end

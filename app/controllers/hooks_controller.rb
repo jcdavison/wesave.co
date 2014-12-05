@@ -4,7 +4,7 @@ class HooksController < ApplicationController
     begin 
       process_hook params
     rescue => e
-      ErrorMailer.new_error(e, params).deliver
+      ErrorMailer.new_error({error: e, params: params}).deliver
     end
     head 200, content_type: "text/html"
   end
@@ -27,6 +27,12 @@ class HooksController < ApplicationController
   end
 
   def remove_transactions transaction_ids
-    transaction_ids.each {|id| Transaction.find(id).destroy}
+    transaction_ids.each do |item_id| 
+      begin
+        Transaction.find_by_item_id(item_id).destroy
+      rescue => e
+        ErrorMailer.new_error(e).deliver
+      end
+    end
   end
 end

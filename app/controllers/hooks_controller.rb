@@ -10,6 +10,7 @@ class HooksController < ApplicationController
   end
 
   private
+
   def process_hook params
     if (0..2).include? params[:code]
       update_user_info params
@@ -29,7 +30,8 @@ class HooksController < ApplicationController
   def remove_transactions transaction_ids
     transaction_ids.each do |item_id| 
       begin
-        Transaction.find_by_item_id(item_id).destroy
+        transaction = Transaction.find_by_item_id(item_id)
+        transaction.destroy if transaction
       rescue => e
         ErrorMailer.new_error(e).deliver
       end

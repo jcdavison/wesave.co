@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     end
 
     unauthenticated do
-      root 'devise/sessions#new', as: :unauthenticated_root
+      root 'home#splash', as: :unauthenticated_root
     end
     put '/phones' => 'users/users#update', as: 'update_user'
   end

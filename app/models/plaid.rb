@@ -24,7 +24,7 @@ class Plaid
       :type => format_type(institution[:type]),
       :email => user_email,
       :options => {
-        :webhook  => 'https://wesave.herokuapp.com/hooks',
+        :webhook  => WEBHOOK,
         :login_only => true
       }
     }
@@ -120,10 +120,8 @@ class Plaid
 
   def self.set_web_hook args
     plaid = Plaid.new
-    query = { access_token: args[:token], secret: plaid.secret, client_id: plaid.client_id,
-      options: { webhook: args[:hook_url]}
-    }
-    query[:options] = JSON.generate(query[:options])
+    query = { access_token: args[:token], secret: plaid.secret, 
+      client_id: plaid.client_id, webhook: args[:hook_url] }
     JSON.parse(Excon.patch("#{plaid.api_server}/connect", query: query).body)
   end
 

@@ -175,7 +175,6 @@ DEPENDENCIES
   excon
   factory_girl_rails
   foundation-rails
-  haml (~> 4.0.5)
   haml-rails
   jbuilder (~> 2.0)
   jquery-rails

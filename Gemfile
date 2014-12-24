@@ -15,7 +15,6 @@ gem 'pry'
 gem 'twilio-ruby', '~> 3.11'
 
 # assets and various sundries
-gem 'foundation-rails'
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'

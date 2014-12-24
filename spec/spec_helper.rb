@@ -1,6 +1,9 @@
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f}
 
 RSpec.configure do |config|
+
+  config.include FactoryGirl::Syntax::Methods
+
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end

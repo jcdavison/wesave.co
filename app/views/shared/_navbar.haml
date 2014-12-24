@@ -1,0 +1,9 @@
+%div{class: 'top-bar', data: {topbar: nil}, role: 'navigation'}
+  %ul.title-area
+    %li.name
+      %h1
+        = link_to 'WeSave.co', authenticated_root_path
+  %section.top-bar-section
+    %ul.right
+      %li
+        = link_to 'Login', new_user_session_path
